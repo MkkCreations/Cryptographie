@@ -5,36 +5,38 @@ export class Crypto {
     private length_: number = this.cryptoTable_.length;
     private n_ : number;
 
-    constructor(n: number = 70) {
-        this.n_ = n;
+    private createTab(n: number) {
+        n = n % this.cryptoTable_.length;
+        this.alterCryptoTable_ = [];
+
         let tab = this.cryptoTable_.concat();
-        const x = this.n_ % this.cryptoTable_.length;
-        for (let i = 0; i < this.cryptoTable_.length; i++) {
+        for (let i = 0; i < this.length_; i++) {
             if (i % 2 === 0) {
-                if (x + i >= tab.length -1) {
-                    this.alterCryptoTable_.push(tab[(x + i) % tab.length]);
-                    tab.splice((x + i) % tab.length, 1);
+                if (n + i >= tab.length -1) {
+                    this.alterCryptoTable_.push(tab[(n + i) % tab.length]);
+                    tab.splice((n + i) % tab.length, 1);
                     continue;
                 } else {
-                    this.alterCryptoTable_.push(tab[x + i]);
-                    tab.splice(x + i, 1);
+                    this.alterCryptoTable_.push(tab[n + i]);
+                    tab.splice(n + i, 1);
                     continue;
                 }
             }else {
-                if (x - i < 0) {
-                    this.alterCryptoTable_.push(tab[Math.abs(x - (x + i) % this.length_) % tab.length]);
-                    tab.splice(Math.abs(x - (x + i) % this.length_) % tab.length, 1);
+                if (n - i < 0) {
+                    this.alterCryptoTable_.push(tab[Math.abs(n - (n + i) % this.length_) % tab.length]);
+                    tab.splice(Math.abs(n - (n + i) % this.length_) % tab.length, 1);
                     continue;
                 } else {
-                    this.alterCryptoTable_.push(tab[x - i]);
-                    tab.splice(x - i, 1);
+                    this.alterCryptoTable_.push(tab[n - i]);
+                    tab.splice(n - i, 1);
                     continue;
                 }
             }
         }
     }
 
-    public encrypt(text: string): string {
+    public encrypt(text: string, n: number = 70): string {
+        this.createTab(n);
         let textC: string = "";
         for (let i = 0; i < text.length; i++) {
             if (this.cryptoTable_.indexOf(text[i]) === -1) textC += "¡";
@@ -43,7 +45,9 @@ export class Crypto {
         return textC;
     }
 
-    public decrypt(text: string): string {
+    public decrypt(text: string, n: number = 70): string {
+        this.createTab(n);
+
         let textD: string = "";
         for (let i = 0; i < text.length; i++) {
             if (text[i] === "¡") textD += " ";
