@@ -5,10 +5,15 @@ export class Crypto {
     private length_: number = this.cryptoTable_.length;
     private n_ : number;
 
+    constructor(n: number = 70) {
+        this.n_ = n;
+        this.createTab(n);
+    }
+
     private createTab(n: number) {
         n = n % this.cryptoTable_.length;
         this.alterCryptoTable_ = [];
-
+        
         let tab = this.cryptoTable_.concat();
         for (let i = 0; i < this.length_; i++) {
             if (i % 2 === 0) {
@@ -35,7 +40,7 @@ export class Crypto {
         }
     }
 
-    public encrypt(text: string, n: number = 70): string {
+    public encrypt(text: string, n: number = this.n_): string {
         this.createTab(n);
         let textC: string = "";
         for (let i = 0; i < text.length; i++) {
@@ -45,7 +50,7 @@ export class Crypto {
         return textC;
     }
 
-    public decrypt(text: string, n: number = 70): string {
+    public decrypt(text: string, n: number = this.n_): string {
         this.createTab(n);
 
         let textD: string = "";
